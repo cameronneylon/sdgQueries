@@ -1,12 +1,12 @@
 WITH titleabs AS (
     SELECT doi,
-           CONCAT(
+           CONCAT( " ",
                    IF(ARRAY_LENGTH(crossref.title) > 0,
-                      " ", LOWER(crossref.title[OFFSET(0)]), "")
+                      LOWER(crossref.title[OFFSET(0)]), "")
                , " ", LOWER(mag.abstract)) as title_abs,
            ARRAY_TO_STRING(
                    ARRAY_CONCAT(
-                           ARRAY(" "),
+                           ARRAY(SELECT " "),
                            ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_0))),
                            ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_1))),
                            ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_2))),
@@ -586,4 +586,4 @@ SELECT doi,
                THEN TRUE
            ELSE FALSE END as sdg_title_abs
 
-FROM titleabs
+FROM titleabs]
